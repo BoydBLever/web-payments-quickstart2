@@ -189,7 +189,7 @@ button:disabled {
 }
 
 #payment-status-container.missing-credentials:after {
-  content: 'applicationId and/or locationId is incorrect';
+  content: 'The applicationId and/or locationId is NOT CORRECT.';
   font-size: 14px;
   line-height: 16px;
 }
