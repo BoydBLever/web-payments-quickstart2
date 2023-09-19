@@ -12,4 +12,3 @@ const client = new Client({
 });
 
 module.exports = { ApiError, client };
-
