@@ -5,10 +5,12 @@
     <script
       type="text/javascript"
       src="https://sandbox.web.squarecdn.com/v1/square.js"
-    ></script>
+    >
+      //script tag for web payments sdk
+    </script>
     <script>
-      const appId = '{sandbox-sq0idb-GrVz3kXUUnUAt-CqGTWNDw}'; //from my Square Developer Dashboard
-      const locationId = '{LH1FVHXN1XBN7}'; //Based on the unqiue access token for stanfordhacker Spring Boot
+      const appId = 'sandbox-sq0idb-GrVz3kXUUnUAt-CqGTWNDw'; //from my Square Developer Dashboard
+      const locationId = 'LH1FVHXN1XBN7'; //Based on the unqiue access token for stanfordhacker Spring Boot
 
       async function initializeCard(payments) {
         const card = await payments.card();
@@ -45,6 +47,7 @@
           return tokenResult.token;
         } else {
           let errorMessage = `Tokenization failed with status: ${tokenResult.status}`;
+          console.log('Tokenization failed');
           if (tokenResult.errors) {
             errorMessage += ` and errors: ${JSON.stringify(
               tokenResult.errors
@@ -78,7 +81,7 @@
 
         let payments;
         try {
-          payments = window.Square.payments(appId, locationId);
+          payments = window.Square.payments(appId, locationId); //initialize web payments sdk with appId and locationId from my Developer Dashboard
         } catch {
           const statusContainer = document.getElementById(
             'payment-status-container'
@@ -104,10 +107,12 @@
             // disable the submit button as we await tokenization and make a payment request.
             cardButton.disabled = true;
             const token = await tokenize(paymentMethod);
+            console.log('TOKEN SUCCESS. What about Payment?');
             const paymentResults = await createPayment(token);
             displayPaymentResults('SUCCESS');
 
             console.debug('Payment Success', paymentResults);
+            console.log('Payment success!');
           } catch (e) {
             cardButton.disabled = false;
             displayPaymentResults('FAILURE');
@@ -129,4 +134,53 @@
     </form>
     <div id="payment-status-container"></div>
   </body>
+
+  <!-- <head>
+  <link href="/app.css" rel="stylesheet" /> 
+  <link rel="stylesheet" href="/reference/sdks/web/static/styles/code-preview.css" preload>
+  <script src="https://sandbox.web.squarecdn.com/v1/square.js"></script>
+</head>
+
+<body>
+  <form id="payment-form">
+    <div id="payment-status-container"></div>
+    <div id="card-container"></div>
+    <button id="card-button" type="button">Pay $992.01</button>
+  </form>
+
+  <script type="text/javascript">
+//The appId and locationId render the desired view in the Square sandbox:
+//https://developer.squareup.com/reference/sdks/web/payments
+    async function main() {
+      const appId = 'sandbox-sq0idb-GrVz3kXUUnUAt-CqGTWNDw'; //appId is from developer dashboard on Square for stanfordhacker spring boot project
+      const locationId = 'LH1FVHXN1XBN7';
+      const payments = Square.payments(appId, locationId);
+      const card = await payments.card();
+      await card.attach('#card-container');
+
+      async function eventHandler(event) {
+        event.preventDefault();
+        const statusContainer = document.getElementById('payment-status-container');
+
+        try {
+          const result = await card.tokenize();
+          if (result.status === 'OK') {
+            console.log(`Payment token is ${result.token}`);
+            statusContainer.innerHTML = "Payment Successful";
+          } else {
+            statusContainer.innerHTML = "Payment not successful";
+          }
+        } catch (e) {
+          console.error(e);
+          statusContainer.innerHTML = "Payment not successful.";
+        }
+      };
+
+      const cardButton = document.getElementById('card-button');
+      cardButton.addEventListener('click', eventHandler);
+    }
+
+    main();
+  </script>
+</body> -->
 </html>
